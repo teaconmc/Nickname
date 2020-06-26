@@ -12,13 +12,17 @@ import java.util.UUID;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
 
 @Mod("nickname")
 @Mod.EventBusSubscriber(modid = "nickname")
@@ -31,6 +35,11 @@ public final class NicknameMod {
     private static final Logger LOGGER = LogManager.getLogger("Nickname");
 
     static final HashMap<UUID, String> NICKS = new HashMap<>();
+
+    public NicknameMod() {
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(
+            () -> FMLNetworkConstants.IGNORESERVERONLY, (serverVer, isDedicated) -> true));
+    }
 
     @SubscribeEvent
     public static void serverStart(FMLServerStartingEvent event) {
