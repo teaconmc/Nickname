@@ -1,0 +1,14 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+
+[[mods]]
+modId="nickname"
+version="${file.jarVersion}"
+displayName="Nickname"
+
+# We will come back later.
+credits=""
+
+authors="3TUSK"
+
+description="A mod that adds a /nickname (alias /nick) command, simple as that."

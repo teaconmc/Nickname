@@ -1,0 +1,6 @@
+{
+    "commands.nickname.nickname.set": "Your nickname is now '%s'.",
+    "commands.nickname.nickname.changed": "Your nickname is changed from '%1$s' to '%2$s'.",
+    "commands.nickname.nickname.cleared": "Your nickname is cleared now.",
+    "commands.nickname.nickname.error": "Failed to change your nickname, are you sure you are human player?"
+}
