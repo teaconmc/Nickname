@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrays;
 import net.minecraft.command.CommandSource;
@@ -17,11 +16,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 public final class NicknameCommand {
 
     public NicknameCommand(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralCommandNode<CommandSource> theNode = dispatcher.register(Commands.literal("nickname").then(
-            Commands.argument("nick", StringArgumentType.greedyString())
-                .executes(NicknameCommand::changeNick))
-            .executes(NicknameCommand::clearNick));
-        dispatcher.register(Commands.literal("nick").redirect(theNode));
+        dispatcher.register(Commands.literal("nickname").redirect(
+            dispatcher.register(Commands.literal("nick").then(
+                Commands.argument("nick", StringArgumentType.greedyString())
+                    .executes(NicknameCommand::changeNick))
+                .executes(NicknameCommand::clearNick))));
     }
 
     private static int changeNick(CommandContext<CommandSource> context) {
