@@ -11,4 +11,11 @@ credits=""
 
 authors="3TUSK"
 
-description="A mod that adds a /nickname (alias /nick) command, simple as that."
+description="A mod that adds a /nick command, simple as that."
+
+[[dependencies.nickname]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.15, 1.15.2]"
+    ordering="NONE"
+    side="BOTH"
