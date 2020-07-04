@@ -18,7 +18,7 @@ apply plugin: 'maven-publish'
 
 version = '0.1.0'
 group = 'org.teacon'
-archivesBaseName = 'Nickname'
+archivesBaseName = 'Nickname-Forge-1.15'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
