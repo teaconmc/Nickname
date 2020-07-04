@@ -16,11 +16,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 public final class NicknameCommand {
 
     public NicknameCommand(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register(Commands.literal("nickname").redirect(
-            dispatcher.register(Commands.literal("nick").then(
+        dispatcher.register(Commands.literal("nick").then(
                 Commands.argument("nick", StringArgumentType.greedyString())
                     .executes(NicknameCommand::changeNick))
-                .executes(NicknameCommand::clearNick))));
+                .executes(NicknameCommand::clearNick));
     }
 
     private static int changeNick(CommandContext<CommandSource> context) {
@@ -30,7 +29,8 @@ public final class NicknameCommand {
             String previous = NicknameMod.NICKS.put(player.getGameProfile().getId(), current);
             context.getSource().sendFeedback(previous == null ? new TranslationTextComponent("commands.nickname.nickname.set", current)
                 : new TranslationTextComponent("commands.nickname.nickname.changed", previous, current), true);
-            player.connection.sendPacket(new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, player));
+            context.getSource().getServer().getPlayerList()
+                .sendPacketToAllPlayers(new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, player));
             return Command.SINGLE_SUCCESS;
         } catch (CommandSyntaxException e) {
             context.getSource().sendErrorMessage(new TranslationTextComponent("commands.nickname.nickname.error", ObjectArrays.EMPTY_ARRAY));
@@ -43,7 +43,8 @@ public final class NicknameCommand {
             ServerPlayerEntity player = context.getSource().asPlayer();
             NicknameMod.NICKS.remove(player.getGameProfile().getId());
             context.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.cleared", ObjectArrays.EMPTY_ARRAY), true);
-            player.connection.sendPacket(new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, player));
+            context.getSource().getServer().getPlayerList()
+                .sendPacketToAllPlayers(new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, player));
             return Command.SINGLE_SUCCESS;
         } catch (CommandSyntaxException e) {
             context.getSource().sendErrorMessage(new TranslationTextComponent("commands.nickname.nickname.error", ObjectArrays.EMPTY_ARRAY));
