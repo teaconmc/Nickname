@@ -1,6 +1,7 @@
 package org.teacon.nickname;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,10 +16,14 @@ public final class NamePlateHandler {
     public static void namePlate(RenderNameplateEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
             final PlayerEntity player = (PlayerEntity) event.getEntity();
-            NetworkPlayerInfo playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(player.getGameProfile().getId());
-            if (playerInfo != null) {
-                event.setContent(playerInfo.getDisplayName().getFormattedText());
+            ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
+            if (connection != null) {
+                NetworkPlayerInfo playerInfo = connection.getPlayerInfo(player.getGameProfile().getId());
+                if (playerInfo != null) {
+                    event.setContent(playerInfo.getDisplayName().getFormattedText());
+                }
             }
+            
         }
     }
 }
