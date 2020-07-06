@@ -19,7 +19,7 @@ public final class NamePlateHandler {
             ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
             if (connection != null) {
                 NetworkPlayerInfo playerInfo = connection.getPlayerInfo(player.getGameProfile().getId());
-                if (playerInfo != null) {
+                if (playerInfo != null && playerInfo.getDisplayName() != null) {
                     event.setContent(playerInfo.getDisplayName().getFormattedText());
                 }
             }
