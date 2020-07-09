@@ -16,6 +16,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -61,6 +63,15 @@ public final class NicknameMod {
             Files.write(Paths.get(".", "nicknames.json"), GSON.toJson(NICKS).getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             LOGGER.error("Failed to save nickname data, details: ", e);
+        }
+    }
+
+    // If a player joins server, sync their display name to everyone who is currently in the server.
+    @SubscribeEvent
+    public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayerEntity) {
+            final ServerPlayerEntity thePlayer = (ServerPlayerEntity) event.getEntity();
+            thePlayer.server.getPlayerList().sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(thePlayer));
         }
     }
 }
