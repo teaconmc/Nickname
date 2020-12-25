@@ -5,5 +5,8 @@
   "commands.nickname.nickname.error": "Failed to change your nickname, are you sure you are human player?",
   "commands.nickname.nickname.pending": "Your request has been sent to the managers, please wait for a minute.",
   "commands.nickname.nickname.approved": "Your nick name has been approved to change to \"%s\".",
-  "commands.nickname.nickname.denied": "Your nick name change request is denied."
+  "commands.nickname.nickname.denied": "Your nick name change request is denied.",
+  "commands.nickname.nickname.review.approve": "You approved %s's nickname change.",
+  "commands.nickname.nickname.review.deny": "You denied %s's nickname change.",
+  "commands.nickname.nickname.review.error": "This request was already processed."
 }

