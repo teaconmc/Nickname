@@ -25,4 +25,5 @@ eclipse
 run
 run_server
 *.txt
+logs
 

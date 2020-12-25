@@ -33,7 +33,7 @@ public final class VanillaPacketUtils {
             playerData.add(packet.new AddPlayerData(player.getGameProfile(), player.ping, player.interactionManager.getGameType(), player.getDisplayName()));
         } catch (Exception e) {
             LOGGER.warn(MARKER, "Failed to construct PlayerListItemPacket, nickname will be out of sync. Check debug.log for more information.");
-            LOGGER.debug(MARKER, "Details: {}", e);
+            LOGGER.debug(MARKER, "Details: ", e);
         }
         return packet;
     }
