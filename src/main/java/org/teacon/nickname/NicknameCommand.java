@@ -163,14 +163,14 @@ public final class NicknameCommand {
     private static class ClickActionApproveRequest extends ClickEvent {
 
         public ClickActionApproveRequest(UUID uuid, String nick) {
-            super(Action.RUN_COMMAND, String.format("/nick approve %s %s", uuid.toString(), nick));
+            super(Action.RUN_COMMAND, String.format("/nick-review approve %s %s", uuid.toString(), nick));
         }
     }
 
     private static class ClickActionDenyRequest extends ClickEvent {
 
         public ClickActionDenyRequest(UUID uuid) {
-            super(Action.RUN_COMMAND, String.format("/nick deny %s", uuid.toString()));
+            super(Action.RUN_COMMAND, String.format("/nick-review deny %s", uuid.toString()));
         }
     }
 }
