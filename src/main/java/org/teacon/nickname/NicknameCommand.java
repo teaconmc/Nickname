@@ -32,16 +32,17 @@ public final class NicknameCommand {
         dispatcher.register(Commands.literal("nick")
                 .then(Commands.argument("nick", StringArgumentType.greedyString())
                         .executes(NicknameCommand::changeNick))
-                .then(Commands.literal("review").requires(NicknameCommand::hasManagePerms)
-                        .executes(NicknameCommand::review))
-                .then(Commands.literal("approve").requires(NicknameCommand::hasManagePerms)
+                .executes(NicknameCommand::clearNick));
+        dispatcher.register(Commands.literal("nick-review")
+                .requires(NicknameCommand::hasManagePerms)
+                .then(Commands.literal("approve")
                         .then(Commands.argument("uuid", StringArgumentType.string())
                                 .then(Commands.argument("nick", StringArgumentType.greedyString())
                                         .executes(NicknameCommand::approve))))
                 .then(Commands.literal("deny").requires(NicknameCommand::hasManagePerms)
                         .then(Commands.argument("uuid", StringArgumentType.string())
                                 .executes(NicknameCommand::deny)))
-                .executes(NicknameCommand::clearNick));
+                .executes(NicknameCommand::review));
     }
 
     private static boolean hasManagePerms(CommandSource src) {
