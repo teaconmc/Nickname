@@ -14,7 +14,6 @@ import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.PermissionAPI;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -77,7 +76,11 @@ public final class NicknameCommand {
             } else {
                 ctx.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.review.error"), true);
             }
-            getPlayerByUUID(uuid).ifPresent(ServerPlayerEntity::refreshDisplayName);
+            getPlayerByUUID(uuid).ifPresent(p -> {
+                p.refreshDisplayName();
+                ServerLifecycleHooks.getCurrentServer().getPlayerList()
+                        .sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(p));
+            });
             return Command.SINGLE_SUCCESS;
         } catch (Exception exception) {
             throw INVALID_UUID.create(ctx.getArgument("uuid", String.class));
