@@ -3,8 +3,8 @@ package org.teacon.nickname;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
-import org.apache.http.annotation.ThreadSafe;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
