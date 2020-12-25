@@ -1,4 +1,4 @@
-package org.teacon.nickname;
+package org.teacon.nickname.handlers;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;

@@ -17,9 +17,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.2.5'
+version = '0.3.0'
 group = 'org.teacon'
-archivesBaseName = 'Nickname-Forge-1.15'
+archivesBaseName = 'Nickname-Forge-1.16'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class NicknameRepo {
+public final class NicknameRepo {
     private static final Map<UUID, String> NICKS = new HashMap<>();
     private static final Gson GSON = new Gson();
     private static final Type TYPE_TOKEN = new TypeToken<Map<UUID, String>>() {

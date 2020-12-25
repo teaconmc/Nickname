@@ -1,6 +1,9 @@
 {
-    "commands.nickname.nickname.set": "Your nickname is now '%s'.",
-    "commands.nickname.nickname.changed": "Your nickname is changed from '%1$s' to '%2$s'.",
-    "commands.nickname.nickname.cleared": "Your nickname is cleared now.",
-    "commands.nickname.nickname.error": "Failed to change your nickname, are you sure you are human player?"
+  "commands.nickname.nickname.set": "Your nickname is now '%s'.",
+  "commands.nickname.nickname.changed": "Your nickname is changed from '%1$s' to '%2$s'.",
+  "commands.nickname.nickname.cleared": "Your nickname is cleared now.",
+  "commands.nickname.nickname.error": "Failed to change your nickname, are you sure you are human player?",
+  "commands.nickname.nickname.pending": "Your request has been sent to the managers, please wait for a minute.",
+  "commands.nickname.nickname.approved": "Your nick name has been approved to change to \"%s\".",
+  "commands.nickname.nickname.denied": "Your nick name change request is denied."
 }

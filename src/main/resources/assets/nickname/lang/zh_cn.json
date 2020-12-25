@@ -1,6 +1,9 @@
 {
-    "commands.nickname.nickname.set": "你的昵称现在是 '%s'。",
-    "commands.nickname.nickname.changed": "你的昵称现已从'%1$s' 改为 '%2$s'。",
-    "commands.nickname.nickname.cleared": "你的昵称已重置。",
-    "commands.nickname.nickname.error": "更改昵称失败，你确定你是正常玩家吗？"
+  "commands.nickname.nickname.set": "你的昵称现在是 '%s'。",
+  "commands.nickname.nickname.changed": "你的昵称现已从'%1$s' 改为 '%2$s'。",
+  "commands.nickname.nickname.cleared": "你的昵称已重置。",
+  "commands.nickname.nickname.error": "更改昵称失败，你确定你是正常玩家吗？",
+  "commands.nickname.nickname.pending": "更改请求已发送，请等待审核。",
+  "commands.nickname.nickname.approved": "你的昵称已被同意更改为 \"%s\"。",
+  "commands.nickname.nickname.denied": "你的昵称更改请求被拒绝。"
 }
