@@ -47,7 +47,7 @@ public final class NicknameCommand {
 
     private static boolean hasManagePerms(CommandSource src) {
         try {
-            return PermissionAPI.hasPermission(src.asPlayer(), NICKNAME_MANAGE) || src.asPlayer().getGameProfile().getName().equals("Seraph_JACK");
+            return PermissionAPI.hasPermission(src.asPlayer(), NICKNAME_MANAGE);
         } catch (Exception e) {
             return false;
         }
