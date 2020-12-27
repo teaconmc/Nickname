@@ -21,6 +21,7 @@ public final class NicknameReview {
 
     public static boolean approve(UUID uuid, String nick) {
         if (!requests.containsKey(uuid)) return false;
+        if (!requests.get(uuid).equals(nick)) return false;
         requests.remove(uuid);
         NicknameRepo.setNick(uuid, nick);
         ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers().stream()
