@@ -46,11 +46,10 @@ public final class NicknameCommand {
     }
 
     private static boolean hasManagePerms(CommandSource src) {
-        try {
-            return PermissionAPI.hasPermission(src.asPlayer(), NICKNAME_MANAGE);
-        } catch (Exception e) {
-            return false;
+        if (src.source instanceof ServerPlayerEntity) {
+            return PermissionAPI.hasPermission((ServerPlayerEntity) src.source, NICKNAME_MANAGE);
         }
+        return src.hasPermissionLevel(3);
     }
 
     private static int review(CommandContext<CommandSource> ctx) throws CommandSyntaxException {
