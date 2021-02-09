@@ -4,10 +4,9 @@ import java.time.temporal.ChronoUnit
 
 buildscript {
     repositories {
-        // maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
-        maven { url = 'https://maven.covertdragon.team/repository/internal' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
@@ -17,7 +16,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.3.2'
+version = '0.3.3'
 group = 'org.teacon'
 archivesBaseName = 'Nickname-Forge-1.16'
 
@@ -57,16 +56,6 @@ minecraft {
                 }
             }
         }
-    }
-}
-
-allprojects {
-    repositories {
-        maven {
-            url = 'https://maven.covertdragon.team/repository/internal'
-        }
-        mavenCentral()
-        jcenter()
     }
 }
 
