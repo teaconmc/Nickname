@@ -4,15 +4,13 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.play.server.SPlayerListItemPacket;
-import net.minecraft.network.play.server.SPlayerListItemPacket.AddPlayerData;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public final class VanillaPacketUtils {
 
@@ -22,15 +20,15 @@ public final class VanillaPacketUtils {
     private static final Field DISPLAY_NAME;
 
     static {
-        DISPLAY_NAME = ObfuscationReflectionHelper.findField(SPlayerListItemPacket.class, "field_179769_b");
+        DISPLAY_NAME = ObfuscationReflectionHelper.findField(ClientboundPlayerInfoPacket.class, "entries");
     }
 
     @SuppressWarnings("unchecked")
-    public static SPlayerListItemPacket displayNameUpdatePacketFor(ServerPlayerEntity player) {
-        final SPlayerListItemPacket packet = new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, Collections.emptyList());
+    public static ClientboundPlayerInfoPacket displayNameUpdatePacketFor(ServerPlayer player) {
+        final ClientboundPlayerInfoPacket packet = new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.UPDATE_DISPLAY_NAME, Collections.emptyList());
         try {
-            List<SPlayerListItemPacket.AddPlayerData> playerData = (List<AddPlayerData>) DISPLAY_NAME.get(packet);
-            playerData.add(packet.new AddPlayerData(player.getGameProfile(), player.ping, player.interactionManager.getGameType(), player.getDisplayName()));
+            List<ClientboundPlayerInfoPacket.PlayerUpdate> playerData = (List<ClientboundPlayerInfoPacket.PlayerUpdate>) DISPLAY_NAME.get(packet);
+            playerData.add(new ClientboundPlayerInfoPacket.PlayerUpdate(player.getGameProfile(), player.latency, player.gameMode.getGameModeForPlayer(), player.getDisplayName()));
         } catch (Exception e) {
             LOGGER.warn(MARKER, "Failed to construct PlayerListItemPacket, nickname will be out of sync. Check debug.log for more information.");
             LOGGER.debug(MARKER, "Details: ", e);

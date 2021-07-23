@@ -1,9 +1,9 @@
 package org.teacon.nickname.handlers;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderNameplateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -15,13 +15,13 @@ public final class NamePlateHandler {
 
     @SubscribeEvent
     public static void namePlate(RenderNameplateEvent event) {
-        if (event.getEntity() instanceof PlayerEntity) {
-            final PlayerEntity player = (PlayerEntity) event.getEntity();
-            ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
+        if (event.getEntity() instanceof Player) {
+            final Player player = (Player) event.getEntity();
+            ClientPacketListener connection = Minecraft.getInstance().getConnection();
             if (connection != null) {
-                NetworkPlayerInfo playerInfo = connection.getPlayerInfo(player.getGameProfile().getId());
-                if (playerInfo != null && playerInfo.getDisplayName() != null) {
-                    event.setContent(playerInfo.getDisplayName());
+                PlayerInfo playerInfo = connection.getPlayerInfo(player.getGameProfile().getId());
+                if (playerInfo != null && playerInfo.getTabListDisplayName() != null) {
+                    event.setContent(playerInfo.getTabListDisplayName());
                 }
             }
         }

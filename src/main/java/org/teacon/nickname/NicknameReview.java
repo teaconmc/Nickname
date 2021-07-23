@@ -1,8 +1,8 @@
 package org.teacon.nickname;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
@@ -25,9 +25,9 @@ public final class NicknameReview {
         requests.remove(uuid);
         NicknameRepo.setNick(uuid, nick);
         ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers().stream()
-                .filter(p -> p.getUniqueID().equals(uuid)).findAny().ifPresent((player) ->
-                player.sendStatusMessage(
-                        new TranslationTextComponent("commands.nickname.nickname.approved", nick), false));
+                .filter(p -> p.getUUID().equals(uuid)).findAny().ifPresent((player) ->
+                player.displayClientMessage(
+                        new TranslatableComponent("commands.nickname.nickname.approved", nick), false));
         return true;
     }
 
@@ -35,9 +35,9 @@ public final class NicknameReview {
         if (!requests.containsKey(uuid)) return false;
         requests.remove(uuid);
         ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers().stream()
-                .filter(p -> p.getUniqueID().equals(uuid)).findAny().ifPresent((player) ->
-                player.sendStatusMessage(
-                        new TranslationTextComponent("commands.nickname.nickname.denied"), false));
+                .filter(p -> p.getUUID().equals(uuid)).findAny().ifPresent((player) ->
+                player.displayClientMessage(
+                        new TranslatableComponent("commands.nickname.nickname.denied"), false));
         return true;
     }
 

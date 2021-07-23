@@ -5,11 +5,10 @@ import java.time.temporal.ChronoUnit
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -18,12 +17,12 @@ apply plugin: 'maven-publish'
 
 version = '0.3.3'
 group = 'org.teacon'
-archivesBaseName = 'Nickname-Forge-1.16'
+archivesBaseName = 'Nickname-Forge-1.17'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
-    mappings channel: 'snapshot', version: '20201028-1.16.3'
+    mappings channel: 'official', version: '1.17.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
@@ -60,7 +59,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.0'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.1'
 }
 
 jar {
@@ -87,11 +86,11 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = "org.teacon"
-            artifactId = "Nickname-Forge-1.16"
+            artifactId = "Nickname-Forge-1.17"
 
             artifact reobfArtifact
             pom {
-                name = 'Nickname for Minecraft 1.16'
+                name = 'Nickname for Minecraft 1.17'
                 description = 'Minecraft mod that adds a /nick command, allowing changing display name.'
                 licenses {
                     license {
