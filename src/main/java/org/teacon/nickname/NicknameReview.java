@@ -1,6 +1,7 @@
 package org.teacon.nickname;
 
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
@@ -24,10 +25,14 @@ public final class NicknameReview {
         if (!requests.get(uuid).equals(nick)) return false;
         requests.remove(uuid);
         NicknameRepo.setNick(uuid, nick);
-        ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers().stream()
-                .filter(p -> p.getUniqueID().equals(uuid)).findAny().ifPresent((player) ->
-                player.sendStatusMessage(
-                        new TranslationTextComponent("commands.nickname.nickname.approved", nick), false));
+        PlayerList playerList = ServerLifecycleHooks.getCurrentServer().getPlayerList();
+        playerList.getPlayers().stream()
+                .filter(p -> p.getUniqueID().equals(uuid)).findAny().ifPresent((player) -> {
+                    player.sendStatusMessage(
+                            new TranslationTextComponent("commands.nickname.nickname.approved", nick), false);
+                    player.refreshDisplayName();
+                    playerList.sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(player));
+                });
         return true;
     }
 

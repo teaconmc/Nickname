@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrays;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -122,8 +123,9 @@ public final class NicknameCommand {
         String previous = NicknameRepo.setNick(player.getUniqueID(), current);
         context.getSource().sendFeedback(previous == null ? new TranslationTextComponent("commands.nickname.nickname.set", current)
                 : new TranslationTextComponent("commands.nickname.nickname.changed", previous, current), true);
-        context.getSource().getServer().getPlayerList().sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(player));
+        PlayerList playerList = context.getSource().getServer().getPlayerList();
         player.refreshDisplayName();
+        playerList.sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(player));
         return Command.SINGLE_SUCCESS;
     }
 
