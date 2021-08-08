@@ -1,6 +1,7 @@
 package org.teacon.nickname;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.server.SPlayerListItemPacket;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -53,7 +54,8 @@ public final class NicknameMod {
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayerEntity) {
             final ServerPlayerEntity thePlayer = (ServerPlayerEntity) event.getEntity();
-            thePlayer.server.getPlayerList().sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(thePlayer));
+            final SPlayerListItemPacket packet = new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, thePlayer);
+            thePlayer.server.getPlayerList().sendPacketToAllPlayers(packet);
         }
     }
 }

@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrays;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.server.SPlayerListItemPacket;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
@@ -78,9 +79,9 @@ public final class NicknameCommand {
                 ctx.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.review.error"), true);
             }
             getPlayerByUUID(uuid).ifPresent(p -> {
+                PlayerList playerList = ServerLifecycleHooks.getCurrentServer().getPlayerList();
                 p.refreshDisplayName();
-                ServerLifecycleHooks.getCurrentServer().getPlayerList()
-                        .sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(p));
+                playerList.sendPacketToAllPlayers(new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, p));
             });
             return Command.SINGLE_SUCCESS;
         } catch (Exception exception) {
@@ -125,7 +126,7 @@ public final class NicknameCommand {
                 : new TranslationTextComponent("commands.nickname.nickname.changed", previous, current), true);
         PlayerList playerList = context.getSource().getServer().getPlayerList();
         player.refreshDisplayName();
-        playerList.sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(player));
+        playerList.sendPacketToAllPlayers(new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, player));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -133,8 +134,9 @@ public final class NicknameCommand {
         ServerPlayerEntity player = context.getSource().asPlayer();
         NicknameRepo.clearNick(player.getUniqueID());
         context.getSource().sendFeedback(new TranslationTextComponent("commands.nickname.nickname.cleared", ObjectArrays.EMPTY_ARRAY), true);
-        context.getSource().getServer().getPlayerList().sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(player));
+        PlayerList playerList = context.getSource().getServer().getPlayerList();
         player.refreshDisplayName();
+        playerList.sendPacketToAllPlayers(new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, player));
         return Command.SINGLE_SUCCESS;
     }
 

@@ -1,6 +1,7 @@
 package org.teacon.nickname;
 
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.network.play.server.SPlayerListItemPacket;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -31,7 +32,8 @@ public final class NicknameReview {
                     player.sendStatusMessage(
                             new TranslationTextComponent("commands.nickname.nickname.approved", nick), false);
                     player.refreshDisplayName();
-                    playerList.sendPacketToAllPlayers(VanillaPacketUtils.displayNameUpdatePacketFor(player));
+                    final SPlayerListItemPacket packet = new SPlayerListItemPacket(SPlayerListItemPacket.Action.UPDATE_DISPLAY_NAME, player);
+                    playerList.sendPacketToAllPlayers(packet);
                 });
         return true;
     }
